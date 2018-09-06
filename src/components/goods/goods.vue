@@ -29,6 +29,9 @@
                 <div class="price">
                   <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food" />
+                </div>
               </div>
             </li>
           </ul>
@@ -42,6 +45,7 @@
 <script type="text/ecmascript-6">
 import BScroll from 'better-scroll';
 import shopcart from 'components/shopcart/shopcart';
+import cartcontrol from 'components/cartcontrol/cartcontrol';
 export default {
   data () {
     return {
@@ -56,7 +60,8 @@ export default {
     }
   },
   components: {
-    shopcart
+    shopcart,
+    cartcontrol
   },
   computed: {
     currentIndex () {
@@ -100,7 +105,8 @@ export default {
         // 当 probeType 为 2 的时候，会在屏幕滑动的过程中实时的派发 scroll 事件；
         // 当 probeType 为 3 的时候，不仅在屏幕滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件。
         // 如果没有设置该值，其默认值为 0，即不派发 scroll 事件。
-        probeType: 3
+        probeType: 3,
+        click: true
       });
       this.foodsScroll.on('scroll', (pos) => {
         this.scrollY = Math.abs(Math.round(pos.y));
@@ -238,4 +244,8 @@ export default {
               font-size: 10px
               color: rgb(147, 153, 159)
               text-decoration: line-through
+          .cartcontrol-wrapper
+            position: absolute
+            bottom: 12px
+            right: 0
 </style>
