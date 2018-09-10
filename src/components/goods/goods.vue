@@ -30,7 +30,7 @@
                   <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food" />
+                  <cartcontrol :food="food" @cart-add="cartAdd"/>
                 </div>
               </div>
             </li>
@@ -38,7 +38,9 @@
         </li>
       </ul>
     </div>
-    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods"
+    ref="shopcart"></shopcart>
+    <!-- <shopcartlist v-show="shopcartlist" :selectFoods="selectFoods"></shopcartlist> -->
   </div>
 </template>
 
@@ -46,12 +48,14 @@
 import BScroll from 'better-scroll';
 import shopcart from 'components/shopcart/shopcart';
 import cartcontrol from 'components/cartcontrol/cartcontrol';
+// import shopcartlist from 'components/shopcartlist/shopcartlist.vue';
 export default {
   data () {
     return {
       goods: [],
       listHeight: [],
-      scrollY: 0
+      scrollY: 0,
+      shopcartlist: true
     };
   },
   props: {
@@ -62,6 +66,7 @@ export default {
   components: {
     shopcart,
     cartcontrol
+    // shopcartlist
   },
   computed: {
     currentIndex () {
@@ -72,6 +77,18 @@ export default {
           return i;
         }
       }
+    },
+    // 将已选的food数组传递给购物车
+    selectFoods () {
+      let foods = [];
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            foods.push(food);
+          }
+        });
+      });
+      return foods;
     }
   },
   created () {
@@ -133,6 +150,18 @@ export default {
       let foodList = this.$refs.foodWrapper.getElementsByClassName('food-list-hook');
       let el = foodList[index];
       this.foodsScroll.scrollToElement(el);
+    },
+    cartAdd (target) {
+      this._drop(target);
+    },
+    // 通过事件监听$emit("cart-add",event.target)，把enent.target从子组件传递给父组件
+    // @cart-add="cartAdd",事件cart-add触发父组件cartAdd方法
+    // 注册shopcart组件的ref引用，并在cartAdd方法中调用该组件的方法，传递target即el
+    _drop (target) {
+      // 让下落动画异步执行 优化体验
+      this.$nextTick(() => {
+        this.$refs.shopcart.drop(target);
+      });
     }
   }
 };
@@ -222,7 +251,7 @@ export default {
             font-size: 14px
             color: rgb(7, 17, 27)
           .desc,.extra
-            height: 10px
+            // height: 10px
             line-height: 10px
             font-size: 10px
             color: rgb(147, 153, 159)

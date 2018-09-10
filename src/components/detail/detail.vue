@@ -1,47 +1,50 @@
 <template>
-  <!-- 使用Vue提供的transition封装组件，给任何元素和组件添加进入/离开过渡 -->
-  <!-- 条件渲染 v-if -->
-  <!-- 条件展示 -->
-  <!-- 动态组件 -->
-  <!-- 组根节点 -->
-  <!-- 自动嗅探目标元素是否应用了 CSS 过渡或动画，如果是，在恰当的时机添加/删除 CSS 类名 -->
-  <transition name="fade">
-    <div v-show="detailShow" class="detail">
-      <div class="detail-wrapper clearfix">
-        <div class="detail-main">
-          <h1 class="name">{{seller.name}}</h1>
-          <div class="star-wrapper">
-            <star :size="48" :score="seller.score"></star>
-          </div>
-          <div class="title">
-            <div class="line"></div>
-            <div class="text">优惠信息</div>
-            <div class="line"></div>
-          </div>
-          <ul v-if="seller.supports" class="supports">
-            <li class="support-item" v-for="(item, $index) in seller.supports" :key="item">
-              <span class="icon" :class="classMap[seller.supports[$index].type]"></span>
-              <span class="text">{{seller.supports[$index].description}}</span>
-            </li>
-          </ul>
-          <div class="title">
-            <div class="line"></div>
-            <div class="text">商家公告</div>
-            <div class="line"></div>
-          </div>
-          <div class="bulletin">
-            <p class="content">
-              {{seller.bulletin}}
-            </p>
+  <div class="detail-wrapper">
+     <!-- 使用Vue提供的transition封装组件，给任何元素和组件添加进入/离开过渡 -->
+    <!-- 条件渲染 v-if -->
+    <!-- 条件展示 -->
+    <!-- 动态组件 -->
+    <!-- 组根节点 -->
+    <!-- 自动嗅探目标元素是否应用了 CSS 过渡或动画，如果是，在恰当的时机添加/删除 CSS 类名 -->
+    <transition name="fade">
+      <div v-show="detailShow" class="detail">
+        <div class="detail-wrapper clearfix">
+          <div class="detail-main">
+            <h1 class="name">{{seller.name}}</h1>
+            <div class="star-wrapper">
+              <star :size="48" :score="seller.score"></star>
+            </div>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">优惠信息</div>
+              <div class="line"></div>
+            </div>
+            <ul v-if="seller.supports" class="supports">
+              <li class="support-item" v-for="(item, $index) in seller.supports" :key="item">
+                <span class="icon" :class="classMap[seller.supports[$index].type]"></span>
+                <span class="text">{{seller.supports[$index].description}}</span>
+              </li>
+            </ul>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">商家公告</div>
+              <div class="line"></div>
+            </div>
+            <div class="bulletin">
+              <p class="content">
+                {{seller.bulletin}}
+              </p>
+            </div>
           </div>
         </div>
+        <div class="detail-close" @click="hideDetail">
+          <i class="icon-close"></i>
+        </div>
+        <!-- <div class="background"></div> -->
       </div>
-      <div class="detail-close" @click="hideDetail">
-        <i class="icon-close"></i>
-      </div>
-      <!-- <div class="background"></div> -->
-    </div>
-  </transition>
+    </transition>
+    <div class="detail-mask" v-show="detailShow"></div>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -181,4 +184,13 @@ export default {
     //   background: rgba(7, 17, 27, 0.8)
     //   background-size: 150% 150%
     //   z-index: -1
+  .detail-mask
+    position: fixed
+    z-index: 80
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background: rgba(7, 17, 27, 0.6)
+    filter: blur(10px)
 </style>
