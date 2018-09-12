@@ -37,48 +37,26 @@
         <!-- 商品评价 -->
         <div class="rating">
           <h1 class="title">商品评价</h1>
-          <ratingselect :ratings="food.ratings" :select-type="selectType" :desc="desc" :only-content="onlyContent"></ratingselect>
+          <ratingselect :ratings="food.ratings" :select-type="selectType" :desc="desc" :only-content="onlyContent"
+          @ratingtype-select="ratingTypeSelect" @content-toggle="contentToggle"></ratingselect>
         </div>
         <div class="rating-wrapper">
           <ul v-show="food.ratings && food.ratings.length">
-            <li v-for="rating in food.ratings" :key="rating" class="rating-item">
+            <li v-show="needShow(rating.rateType, rating.text)" v-for="rating in food.ratings" :key="rating" class="rating-item">
               <div class="user">
                 <span class="name">{{rating.username}}</span>
                 <img :src="rating.avatar" width="12" height="12px">
               </div>
-              <div class="time">{{rating.rateTime}}</div>
+              <div class="time">{{rating.rateTime | formatDate}}</div>
               <p class="text">
                 <span :class="{'icon-thumb_up':rating.rateType===0, 'icon-thumb_down':rating.rateType===1}"></span>
                 {{rating.text}}
               </p>
             </li>
           </ul>
-          <div class="no-rating" v-show="!food.ratings || !food.ratings.length"></div>
+          <div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
         </div>
       </div>
-      <!-- <div class="ratings">
-        <h1 class="title">商品评价</h1>
-        <ul>
-          <li><a href="">全部</a></li>
-          <li><a href="">推荐</a></li>
-          <li><a href="">吐槽</a></li>
-        </ul>
-        <div class="valid-wrapper" @click="valid">
-          <i></i>
-          <span class="valid">只看有内容的评价</span>
-        </div>
-        <ul>
-          <li v-for="rating in food.ratings" :key="rating">
-            <span class="rate-time">{{rating.rateTime}}</span>
-            <span class="username">{{rating.username}}</span>
-            <span class="avatar"><img :src="rating.avatar"></span>
-            <div class="rating-wrapper">
-              <i></i>
-              <span>{{food.text}}</span>
-            </div>
-          </li>
-        </ul>
-      </div> -->
     </div>
   </transition>
 </template>
@@ -89,6 +67,8 @@ import Vue from 'vue';
 import cartcontrol from 'components/cartcontrol/cartcontrol';
 import split from 'components/split/split';
 import ratingselect from 'components/ratingselect/ratingselect';
+// {a,b,c}可以引入多个方式
+import {formatDate} from 'common/js/date';
 // const POSITIVE = 0;
 // const NEGATIVE = 1;
 const ALL = 2;
@@ -105,6 +85,12 @@ export default {
         negative: '吐槽'
       }
     };
+  },
+  filters: {
+    formatDate (time) {
+      let date = new Date(time);
+      return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+    }
   },
   components: {
     cartcontrol,
@@ -154,6 +140,28 @@ export default {
     // 即监听事件cart-add传递参数为event.target而非event
     _addFood (target) {
       this.$emit('add-food', target);
+    },
+    ratingTypeSelect (type) {
+      this.selectType = type;
+      this.$nextTick(() => {
+        this.scroll.refresh();
+      });
+    },
+    contentToggle (onlyContent) {
+      this.onlyContent = onlyContent;
+      this.$nextTick(() => {
+        this.scroll.refresh();
+      });
+    },
+    needShow (rateType, text) {
+      if (this.onlyContent && !text) {
+        return false;
+      }
+      if (this.selectType === ALL || rateType === this.selectType) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };
@@ -313,4 +321,8 @@ export default {
             color: rgb(147, 153, 159)
           img
             vertical-align: top
+    .no-rating
+      padding: 16px 0
+      font-size: 12px
+      color: rgb(147, 153, 159)
 </style>

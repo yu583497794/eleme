@@ -1,9 +1,9 @@
 <template>
   <div class="ratingselect">
     <div class="rating-type">
-      <span @click="select($event, 2)" class="block positive" :class="{'active': selectType === 2}">{{desc.all}}<span class="count">{{ratings.length}}</span></span>
-      <span @click="select($event, 0)" class="block positive" :class="{'active': selectType === 0}">{{desc.positive}}<span class="count">{{positives.length}}</span></span>
-      <span @click="select($event, 1)" class="block negative" :class="{'active': selectType === 1}">{{desc.negative}}<span class="count">{{negatives.length}}</span></span>
+      <span @click="select($event, 2)" class="block positive" :class="{'active': type === 2}">{{desc.all}}<span class="count">{{ratings.length}}</span></span>
+      <span @click="select($event, 0)" class="block positive" :class="{'active': type === 0}">{{desc.positive}}<span class="count">{{positives.length}}</span></span>
+      <span @click="select($event, 1)" class="block negative" :class="{'active': type === 1}">{{desc.negative}}<span class="count">{{negatives.length}}</span></span>
     </div>
     <div @click="toggleContent" class="switch" :class="{'on':onlyContent}">
       <span class="icon-check_circle"></span>
@@ -20,7 +20,7 @@ export default {
   name: 'ratingselect',
   data () {
     return {
-
+      type: this.selectType
     };
   },
   props: {
@@ -54,15 +54,15 @@ export default {
       if (!event._constructed) {
         return;
       }
-      this.selectType = type;
-      this.$emit('ratingtype.select', type);
+      this.type = type;
+      this.$emit('ratingtype-select', type);
     },
     toggleContent (event) {
       if (!event._constructed) {
         return;
       }
       this.onlyContent = !this.onlyContent;
-      this.$emit('content.toggle', this.onlyContent);
+      this.$emit('content-toggle', this.onlyContent);
     }
   },
   computed: {
