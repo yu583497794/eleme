@@ -62,9 +62,6 @@
         暂无评价
       </div>
     </div>
-    <div class="shopcart-wrapper">
-      <shopcart></shopcart>
-    </div>
   </div>
 </template>
 
@@ -73,7 +70,6 @@ import star from 'components/star/star';
 import split from 'components/split/split';
 import ratingselect from 'components/ratingselect/ratingselect';
 import BScroll from 'better-scroll';
-import shopcart from 'components/shopcart/shopcart';
 // eslint-disable-next-line
 const POSITIVE = 0;
 // eslint-disable-next-line
@@ -118,8 +114,7 @@ export default {
   components: {
     star,
     split,
-    ratingselect,
-    shopcart
+    ratingselect
   },
   methods: {
     randomImage () {
@@ -285,8 +280,4 @@ export default {
               overflow: hidden
               white-space: nowrap
               text-overflow: ellipsis
-    .shopcart-wrapper
-      position: absolute
-      bottom: 0
-      left: 0
 </style>

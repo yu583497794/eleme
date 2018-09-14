@@ -38,8 +38,8 @@
         </li>
       </ul>
     </div>
-    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods"
-    ref="shopcart"></shopcart>
+    <!-- <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods"
+    ref="shopcart"></shopcart> -->
     <food :food="selectedFood" ref="food" @add-food="cartAdd"></food>
   </div>
 </template>
@@ -90,6 +90,11 @@ export default {
         });
       });
       return foods;
+    }
+  },
+  watch: {
+    selectFoods (foods) {
+      this.$emit('selectedFoods', foods);
     }
   },
   created () {
@@ -153,17 +158,19 @@ export default {
       this.foodsScroll.scrollToElement(el);
     },
     cartAdd (target) {
-      this._drop(target);
+      this.$emit('drop', target);
+      // this._drop(target);
     },
+    // 废弃
     // 通过事件监听$emit("cart-add",event.target)，把event.target从子组件传递给父组件
     // @cart-add="cartAdd",事件cart-add触发父组件cartAdd方法
     // 注册shopcart组件的ref引用，并在cartAdd方法中调用该组件的方法，传递target即el
-    _drop (target) {
-      // 让下落动画异步执行 优化体验
-      this.$nextTick(() => {
-        this.$refs.shopcart.drop(target);
-      });
-    },
+    // _drop (target) {
+    //   // 让下落动画异步执行 优化体验
+    //   this.$nextTick(() => {
+    //     this.$refs.shopcart.drop(target);
+    //   });
+    // },
     selectFood (food, event) {
       if (!event._constructed) {
         return;

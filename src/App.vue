@@ -20,7 +20,11 @@
     <keep-alive>
       <!-- 路由出口 -->
       <!-- 路由匹配到的组件将渲染在这里 -->
-      <router-view :seller="seller"></router-view>
+      <router-view :seller="seller" @selectedFoods="selcFoodsFun" @drop="_drop"></router-view>
+    </keep-alive>
+    <keep-alive>
+      <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods"
+      ref="shopcart"></shopcart>
     </keep-alive>
   </div>
 </template>
@@ -28,6 +32,7 @@
 <script type="text/ecmasript-6">
 import header from './components/header/header.vue';
 import detail from './components/detail/detail.vue';
+import shopcart from 'components/shopcart/shopcart';
 import {urlParse} from './common/js/util';
 const ERR_OK = 0;
 export default {
@@ -38,11 +43,12 @@ export default {
         id: (() => {
           // 立即执行函数
           let queryParam = urlParse();
-          console.log(queryParam);
+          // console.log(queryParam);
           return queryParam.id;
         })()
       },
-      detailShow: false
+      detailShow: false,
+      selectFoods: []
     };
   },
   created () {
@@ -58,14 +64,15 @@ export default {
         // this.someObject = Object.assign({}, this.someObject, { a: 1, b: 2 })
         this.seller = Object.assign({}, this.seller, response.data);
         // this.seller = response.data;
-        console.log(this.seller);
+        // console.log(this.seller);
       }
     });
   },
   components: {
     // v-header：header 支持简写 header
     'v-header': header,
-    'detail': detail
+    'detail': detail,
+    'shopcart': shopcart
   },
   methods: {
     showDetail () {
@@ -73,6 +80,16 @@ export default {
     },
     hideDetail () {
       this.detailShow = false;
+    },
+    selcFoodsFun (foods) {
+      this.selectFoods = foods;
+    },
+    // cartcontrol--($emit)>>goods--($emit)>>App--($refs)>>shopcart
+    _drop (target) {
+      // 让下落动画异步执行 优化体验
+      this.$nextTick(() => {
+        this.$refs.shopcart.drop(target);
+      });
     }
   }
 };

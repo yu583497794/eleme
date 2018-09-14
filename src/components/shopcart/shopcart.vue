@@ -25,8 +25,10 @@
         </div>
       </div>
       <div class="ball-container">
-        <transition-group name="drop" @beforeEnter="beforeDrop" @enter="dropping" @afterEnter="afterDrop">
-          <div v-for="(ball,$index) in balls" :key="$index" v-show="ball.show" class="ball">
+        <!--  @afterEnter="afterDrop" -->
+        <!-- 第一次后执行顺序打乱，变为beforeEnter->afterDrop->dropping??? -->
+        <transition-group name="drop" @beforeEnter="beforeDrop" @enter="dropping" tag="div">
+          <div v-for="ball in balls" :key="ball.id" v-show="ball.show" class="ball">
             <!-- hook 表明只是用来被js选择而没有真实的含义 -->
             <div class="inner inner-hook"></div>
           </div>
@@ -68,22 +70,27 @@ export default {
     return {
       balls: [
         {
+          id: 0,
           show: false,
           el: {}
         },
         {
+          id: 1,
           show: false,
           el: {}
         },
         {
+          id: 2,
           show: false,
           el: {}
         },
         {
+          id: 3,
           show: false,
           el: {}
         },
         {
+          id: 4,
           show: false,
           el: {}
         }
@@ -178,6 +185,7 @@ export default {
     beforeDrop (el) {
       let count = this.dropBalls.length;
       while (count--) {
+        // console.log('beforeDrop');
         let ball = this.dropBalls[count];
         if (ball.show) {
           // getBoundingClientRect用于获取某个元素相对于视窗的位置集合
@@ -202,6 +210,7 @@ export default {
       // $nextTick(() => {}) 与DOM相关操作写在该函数回调中
       // 确保DOM已渲染
       this.$nextTick(() => {
+        // console.log('dropping');
         el.style.webkitTransition = 'all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41)';
         el.style.transition = 'all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41)';
         el.style.webkitTransform = 'translate3d(0, 0, 0)';
@@ -212,14 +221,21 @@ export default {
         inner.style.webkitTransform = 'translate3d(0, 0, 0)';
         inner.style.transform = 'translate3d(0, 0, 0)';
       });
-    },
-    afterDrop (el) {
+      // console.log('afterDrop');
       let ball = this.dropBalls.shift();
       if (ball) {
         ball.show = false;
-        el.style.display = 'none';
+        // el.style.display = 'none';
       }
     },
+    // afterDrop (el) {
+    //   console.log('afterDrop');
+    //   let ball = this.dropBalls.shift();
+    //   if (ball) {
+    //     ball.show = false;
+    //     // el.style.display = 'none';
+    //   }
+    // },
     toggleList () {
       if (!this.totalCount) {
         return;

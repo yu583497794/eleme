@@ -75,7 +75,6 @@ import BScroll from 'better-scroll';
 import star from 'components/star/star';
 import split from 'components/split/split';
 import {saveToLocal, loadFromLocal} from '../../common/js/store';
-import shopcart from 'components/shopcart/shopcart';
 export default {
   data () {
     return {
@@ -89,7 +88,6 @@ export default {
   computed: {
     favoriteText () {
       let text = this.favorite ? '已收藏' : '收藏';
-      console.log(text);
       return text;
     }
   },
@@ -100,8 +98,7 @@ export default {
   },
   components: {
     star,
-    split,
-    shopcart
+    split
   },
   created () {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
@@ -111,7 +108,7 @@ export default {
     // 监听seller变量的值的变化再初始化
     // 防止滚动不生效
     'seller' () {
-      console.log('watch');
+      // console.log('watch');
       this._initScroll();
       this._initPics();
     }
@@ -119,7 +116,7 @@ export default {
   // DOM已经成功渲染完成
   mounted () {
     // 等到内容将div撑开再对better-scroll的实例初始化
-    console.log('mounted');
+    // console.log('mounted');
     this._initScroll();
     this._initPics();
   },
@@ -131,7 +128,7 @@ export default {
             click: true
           });
         } else {
-          console.log('refresh');
+          // console.log('refresh');
           this.scroll.refresh();
         }
       });
@@ -143,7 +140,7 @@ export default {
         let width = (picWidth + margin) * this.seller.pics.length;
         // 内部容器大于外部容器的宽度，可以使用BScroll
         this.$refs.list.style.width = width + 'px';
-        console.log(this.$refs.wrapper.children);
+        // console.log(this.$refs.wrapper.children);
         this.$nextTick(() => {
           if (!this.picScroll) {
             this.picScroll = new BScroll(this.$refs.wrapper, {

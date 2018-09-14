@@ -5,7 +5,7 @@
       <span @click="select($event, 0)" class="block positive" :class="{'active': type === 0}">{{desc.positive}}<span class="count">{{positives.length}}</span></span>
       <span @click="select($event, 1)" class="block negative" :class="{'active': type === 1}">{{desc.negative}}<span class="count">{{negatives.length}}</span></span>
     </div>
-    <div @click="toggleContent" class="switch" :class="{'on':onlyContent}">
+    <div @click="toggleContent" class="switch" :class="{'on':only}">
       <span class="icon-check_circle"></span>
       <span class="text">只看有内容的评价</span>
     </div>
@@ -20,7 +20,8 @@ export default {
   name: 'ratingselect',
   data () {
     return {
-      type: this.selectType
+      type: this.selectType,
+      only: this.onlyContent
     };
   },
   props: {
@@ -61,8 +62,8 @@ export default {
       if (!event._constructed) {
         return;
       }
-      this.onlyContent = !this.onlyContent;
-      this.$emit('content-toggle', this.onlyContent);
+      this.only = !this.only;
+      this.$emit('content-toggle', this.only);
     }
   },
   computed: {
