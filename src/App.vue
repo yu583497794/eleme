@@ -16,30 +16,49 @@
         <router-link to="seller">商家</router-link>
       </div>
     </div>
-    <!-- 路由出口 -->
-    <!-- 路由匹配到的组件将渲染在这里 -->
-    <router-view :seller="seller"></router-view>
+    <!-- 将组件内容缓存在内存里 -->
+    <keep-alive>
+      <!-- 路由出口 -->
+      <!-- 路由匹配到的组件将渲染在这里 -->
+      <router-view :seller="seller"></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script type="text/ecmasript-6">
 import header from './components/header/header.vue';
 import detail from './components/detail/detail.vue';
+import {urlParse} from './common/js/util';
 const ERR_OK = 0;
 export default {
   data () {
     return {
       // 需要把seller对象传递给子组件 header
-      seller: {},
+      seller: {
+        id: (() => {
+          // 立即执行函数
+          let queryParam = urlParse();
+          console.log(queryParam);
+          return queryParam.id;
+        })()
+      },
       detailShow: false
     };
   },
   created () {
-    this.$http.get('/api/seller').then((response) => {
+    this.$http.get('/api/seller?id=' + this.seller.id).then((response) => {
       response = response.body;
       if (response.errno === ERR_OK) {
-        this.seller = response.data;
-        // console.log(this.seller);
+        // 想向已有对象上添加一些属性 (已有对象即data中声明的seller{id:XXX}}))
+        // 使用 Object.assign() 或 _.extend() 方法来添加属性。
+        // Object.assign(targetObj, srcObj, srcObj) 方法用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。
+        // 但是，添加到对象上的新属性不会触发更新。
+        // 在这种情况下可以创建一个新的对象，让它包含原对象的属性和新的属性
+        // 代替 `Object.assign(this.someObject, { a: 1, b: 2 })`
+        // this.someObject = Object.assign({}, this.someObject, { a: 1, b: 2 })
+        this.seller = Object.assign({}, this.seller, response.data);
+        // this.seller = response.data;
+        console.log(this.seller);
       }
     });
   },

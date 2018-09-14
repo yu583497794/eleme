@@ -25,12 +25,12 @@
         </div>
       </div>
       <div class="ball-container">
-        <transition name="drop" @beforeEnter="beforeDrop" @enter="dropping" @afterEnter="afterDrop">
-          <div v-for="ball in balls" :key="ball" v-show="ball.show" class="ball">
+        <transition-group name="drop" @beforeEnter="beforeDrop" @enter="dropping" @afterEnter="afterDrop">
+          <div v-for="(ball,$index) in balls" :key="$index" v-show="ball.show" class="ball">
             <!-- hook 表明只是用来被js选择而没有真实的含义 -->
             <div class="inner inner-hook"></div>
           </div>
-        </transition>
+        </transition-group>
       </div>
       <transition name="fold">
         <div class="shopcart-list" v-show="listShow">
@@ -40,7 +40,7 @@
           </div>
           <div class="list-content" ref="listContent">
             <ul>
-              <li class="food" v-for="food in selectFoods" :key="food">
+              <li class="food" v-for="(food,$index) in selectFoods" :key="$index">
                 <span class="name">{{food.name}}</span>
                 <div class="price">
                   <span>￥{{food.count*food.price}}</span>

@@ -3,7 +3,7 @@
     <!-- ref 被用来给元素或子组件注册引用信息。引用信息将会注册在父组件的 $refs 对象上。 -->
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="(item, $index) in goods" :key="item" class="menu-item" :class="{'current': currentIndex === $index}"
+        <li v-for="(item, $index) in goods" :key="$index" class="menu-item" :class="{'current': currentIndex === $index}"
         @click="selectMenu($index, $event)">
           <span class="text border-1px">
             <span class="icon" v-show="item.type>=0" :class="classMap[item.type]"></span>{{item.name}}
@@ -13,10 +13,10 @@
     </div>
     <div class="foods-wrapper" ref="foodWrapper">
       <ul>
-        <li class="food-list food-list-hook" v-for="item in  goods" :key="item">
+        <li class="food-list food-list-hook" v-for="(item,$index) in  goods" :key="$index">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li v-for="food in item.foods" :key="food" class="food-item border-1px" @click="selectFood(food,$event)">
+            <li v-for="(food,$index) in item.foods" :key="$index" class="food-item border-1px" @click="selectFood(food,$event)">
               <div class="icon">
                 <img :src="food.icon" width="57" height="57">
               </div>
@@ -155,7 +155,7 @@ export default {
     cartAdd (target) {
       this._drop(target);
     },
-    // 通过事件监听$emit("cart-add",event.target)，把enent.target从子组件传递给父组件
+    // 通过事件监听$emit("cart-add",event.target)，把event.target从子组件传递给父组件
     // @cart-add="cartAdd",事件cart-add触发父组件cartAdd方法
     // 注册shopcart组件的ref引用，并在cartAdd方法中调用该组件的方法，传递target即el
     _drop (target) {

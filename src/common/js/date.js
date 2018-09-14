@@ -30,6 +30,7 @@ export function formatDate (date, fmt) {
     // 重要的是用括号(),正则表达式中每个小括号内的部分表达式就是一个子表达式，没有括号的话，RegExp.$1不能返回子表达式的文本！
     if (new RegExp(`(${k})`).test(fmt)) {
       let str = o[k] + '';
+      // 若匹配到月份、日期等为单个如M-d h:m:s 则匹配到的子表达式文本RegExp.$1.length=1, 如1月2日不需要补零1-2，否则需要按照子表达式文本补零01-02
       fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str));
       // fmt = fmt.replace(RegExp.$1, str);
       console.log(fmt);
