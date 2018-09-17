@@ -25,7 +25,7 @@ var goods = appData.goods;
 var ratings = appData.ratings;
 // 编写路由
 var apiRoutes = express.Router();
-app.get('/api/seller', function (req, res) {
+apiRoutes.get('/seller', function (req, res) {
   // 服务端收到请求后返回给客户端一个json数据
   res.json({
     // 当我们数据正常时，我们通过传递errno字符为0表示数据正常
@@ -34,13 +34,13 @@ app.get('/api/seller', function (req, res) {
     data: seller
   });
 });
-app.get('/api/goods', function (req, res) {
+apiRoutes.get('/goods', function (req, res) {
   res.json({
     errno: 0,
     data: goods
   });
 });
-app.get('/api/ratings', function (req, res) {
+apiRoutes.get('/ratings', function (req, res) {
   res.json({
     errno: 0,
     data: ratings
